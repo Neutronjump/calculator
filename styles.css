@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* General Containers */
+.calculator-container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+/* Calculator Containers */
+.calculator {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: rgb(50, 70, 140);
+}
+
+.calculator-display {
+    display: flex;
+    font-family: 'Share Tech Mono', Arial, sans-serif;
+}
+
+.calculator-functions {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.calculator-buttons {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.calculator-number-row {
+    display: flex;
+}
+
+.calculator-operators {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+/* Calculator Elements */
+.calculator-display p {
+    border: 1px solid rgba(50, 69, 140, 0.5);
+    padding: 12px 8px;
+    margin-bottom: 0.5em;
+    flex: auto;
+    font-size: 2em;
+    min-height: 1em;
+    max-width: 254px;
+    border-radius: 8px;
+    text-align: right;
+    color: rgb(255, 255, 255);
+    background-color: rgb(50,50,50);
+}
+
+/* Calculator Buttons */
+.calculator button {
+    border: 0;
+    border-radius: 8px;
+    margin: 2px;
+    flex: 1 0;
+    background-color: rgb(220, 220, 220);
+    font-size: 2em;
+    width: 64px;
+    height: 64px;
+}
+
+.calculator button:hover {
+    background-color: rgb(255, 255, 255);
+    transition: 0.4s;
+}
+
+.calculator-functions button , .calculator-operators button {
+    background-color: rgb(255, 255, 255);
+}
+
+.calculator-functions button:hover , .calculator-operators button:hover {
+    background-color: rgb(220, 220, 220);
+}
+
+.calculator-number-row button {
+    font-family: "Share Tech Mono", Arial, sans-serif;
+}
+
