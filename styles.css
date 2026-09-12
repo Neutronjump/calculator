@@ -48,6 +48,7 @@
     font-size: 2em;
     min-height: 1em;
     max-width: 254px;
+    max-height: 32px;
     border-radius: 8px;
     text-align: right;
     color: rgb(255, 255, 255);
