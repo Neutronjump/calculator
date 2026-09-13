@@ -4,20 +4,60 @@ function calculator(){
     let calculator = document.querySelector(".calculator");
     let display = document.querySelector(".calculator-display p");
     let equalsButton = document.querySelector(".equals");
+    let negateButton = document.querySelector(".negate");
 
     displayCalc(calculator, display);
     clearDisplay(calculator, display);
 
+    negateButton.addEventListener("click", (e) => {
+        negateCurrentOperand(display);
+    })
     equalsButton.addEventListener("click", (e) => {
-        getOperator(display);
-        getLeftOperand(display);
-        getRightOperand(display);
+        operate(getOperator(display), getLeftOperand(display), getRightOperand(display));
     })
 }
 
-function getOperator(display) {
-    const symbolsToRemove = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "="];
+function negateCurrentOperand(display) {
+    const operators = ["÷", "×", "+", "-"];
     let displayArr = display.textContent.split("");
+    if (!getRightOperand(display) || getRightOperand(display) === "") {
+        if (displayArr[0] === "-") {
+            display.textContent = display.textContent.slice(1);
+            } 
+        else if (!display.textContent.includes(getOperator)) {
+            display.textContent = "-" + display.textContent;
+        }
+    }
+    else {
+        if (displayArr[0] === "-") {
+            let operatorIndex = displayArr.indexOf(getOperator(display), 1);
+            if (displayArr[operatorIndex + 2] === "-") {
+            display.textContent = display.textContent.slice(0,operatorIndex + 1) + display.textContent.slice(operatorIndex + 3, -1);
+        }
+        else {
+            display.textContent = display.textContent.slice(0,operatorIndex + 1) + "(-" + display.textContent.slice(operatorIndex + 1) + ")"; 
+        }
+        }
+        else {
+            let operatorIndex = displayArr.indexOf(getOperator(display));
+            if (displayArr[operatorIndex + 2] === "-") {
+            display.textContent = display.textContent.slice(0,operatorIndex + 1) + display.textContent.slice(operatorIndex + 3, -1);
+        }
+        else {
+            display.textContent = display.textContent.slice(0,operatorIndex + 1) + "(-" + display.textContent.slice(operatorIndex + 1) + ")"; 
+        }
+        }
+    }
+}
+
+
+
+function getOperator(display) {
+    const symbolsToRemove = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "=", ".", "(", ")"];
+    let displayArr = display.textContent.split("");
+    if (displayArr[0] === "-") {
+        displayArr.shift();
+    }
     let operator = displayArr.filter((item) => !(symbolsToRemove.includes(item)))[0];
     return operator;
 }
@@ -26,18 +66,40 @@ function getLeftOperand(display) {
     let displayContent = display.textContent.split("");
     let operator =  getOperator(display);
     let leftOperand = displayContent
-    .slice(0,displayContent.indexOf(operator))
+    .slice(0,displayContent.indexOf(operator, 1))
     .join("");
-    return leftOperand;
+    return parseFloat(leftOperand);
 }
 
 function getRightOperand(display) {
     let displayContent = display.textContent.split("");
     let operator =  getOperator(display);
-    let rightOperand = displayContent
-    .slice(displayContent.indexOf(operator)+1)
-    .join("");
-    return rightOperand;
+    if (!displayContent.includes("(")) {
+        let rightOperand = displayContent
+        .slice(displayContent.lastIndexOf(operator)+1)
+        .join("");
+        if (displayContent.includes(operator)) {
+            return parseFloat(rightOperand);
+        }
+    }
+    else {
+        if (operator = "-") {
+            let rightOperand = displayContent
+            .slice(displayContent.lastIndexOf(operator), -1)
+            .join("");
+            if (displayContent.includes(operator)) {
+                return parseFloat(rightOperand);
+            }
+        }
+        else {
+            let rightOperand = displayContent
+            .slice(displayContent.indexOf(operator), -1)
+            .join("");
+            if (displayContent.includes(operator)) {
+                return parseFloat(rightOperand);
+            }
+        }
+    }
 }
 
 function clearDisplay(calculator, display) {
@@ -51,8 +113,11 @@ function clearDisplay(calculator, display) {
 function displayCalc(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if(e.target.closest("button")) {
-            let buttonContent = e.target
-            display.textContent += e.target.textContent;
+            if (!e.target.closest(".negate") && !e.target.closest(".equals")) {
+                let buttonContent = e.target;
+                display.textContent += e.target.textContent;
+            }
+            
         }
     })
 }
