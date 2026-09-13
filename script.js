@@ -37,7 +37,6 @@ function getRightOperand(display) {
     let rightOperand = displayContent
     .slice(displayContent.indexOf(operator)+1)
     .join("");
-    console.log(rightOperand);
     return rightOperand;
 }
 
