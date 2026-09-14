@@ -114,8 +114,16 @@ function displayCalc(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if(e.target.closest("button")) {
             if (!e.target.closest(".negate") && !e.target.closest(".equals")) {
-                let buttonContent = e.target;
-                display.textContent += e.target.textContent;
+                let buttonContent = e.target.textContent;
+                if (display.textContent.includes(")")) {
+                    let displayArr = display.textContent.split("");
+                    let indexOfCloseParenthesis = displayArr.indexOf(")");
+                    displayArr.splice(indexOfCloseParenthesis - 1, 0, buttonContent);
+                    display.textContent = displayArr.join("");
+                }
+                else {
+                    display.textContent += buttonContent;
+                }
             }
             
         }
