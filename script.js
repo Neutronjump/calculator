@@ -13,7 +13,8 @@ function calculator(){
         negateCurrentOperand(display);
     })
     equalsButton.addEventListener("click", (e) => {
-        operate(getOperator(display), getLeftOperand(display), getRightOperand(display));
+        let operationResult = operate(getOperator(display), getLeftOperand(display), getRightOperand(display));
+        display.textContent = operationResult;
     })
 }
 
