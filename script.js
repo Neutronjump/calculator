@@ -8,7 +8,6 @@ function calculator(){
 
     displayCalc(calculator, display);
     clearDisplay(calculator, display);
-    replaceDisplayedOperator(calculator, display);
 
     negateButton.addEventListener("click", (e) => {
         negateCurrentOperand(display);
@@ -18,19 +17,6 @@ function calculator(){
         display.textContent = operationResult;
     })
 }
-
-function replaceDisplayedOperator(calculator, display) {
-    calculator.addEventListener("click", (e) => {
-        if (e.target.closest("button") && e.target.closest(".calculator-operators")) {
-            let displayArr = display.split("");
-            if (displayArr.includes(getOperator(display), 1)) {
-                displayArr[indexOf(getOperator(display), 1)] = e.target.textContent;
-                display.textContent = displayArr.join("");
-            }
-        }
-    })
-}
-
 
 function negateCurrentOperand(display) {
     const operators = ["÷", "×", "+", "-"];
@@ -125,20 +111,35 @@ function clearDisplay(calculator, display) {
     })
 }
 
+function replaceDisplayedOperator(e, display) {
+    let displayArr = display.textContent.split("");
+    if (displayArr.includes(getOperator(display), 1)) {
+        displayArr[displayArr.indexOf(getOperator(display), 1)] = e.target.textContent;
+        display.textContent = displayArr.join("");
+    }
+
+}
+function addToDisplay(e, display) {
+    let buttonContent = e.target.textContent;
+    if (display.textContent.includes(")")) {
+        let displayArr = display.textContent.split("");
+        let indexOfCloseParenthesis = displayArr.indexOf(")");
+        displayArr.splice(indexOfCloseParenthesis - 1, 0, buttonContent);
+        display.textContent = displayArr.join("");
+    }
+    else {
+        display.textContent += buttonContent;
+    }
+}
+
 function displayCalc(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if(e.target.closest("button")) {
-            if (!e.target.closest(".negate") && !e.target.closest(".equals")) {
-                let buttonContent = e.target.textContent;
-                if (display.textContent.includes(")")) {
-                    let displayArr = display.textContent.split("");
-                    let indexOfCloseParenthesis = displayArr.indexOf(")");
-                    displayArr.splice(indexOfCloseParenthesis - 1, 0, buttonContent);
-                    display.textContent = displayArr.join("");
-                }
-                else {
-                    display.textContent += buttonContent;
-                }
+            if(e.target.closest(".calculator-operators") && getOperator(display)) {
+                replaceDisplayedOperator(e, display);
+            }
+            else if (!e.target.closest(".negate") && !e.target.closest(".equals")) {
+                addToDisplay(e, display);
             }
             
         }
