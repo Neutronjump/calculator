@@ -66,10 +66,13 @@ function getOperator(display) {
 function getLeftOperand(display) {
     let displayContent = display.textContent.split("");
     let operator =  getOperator(display);
+    if (operator) {
     let leftOperand = displayContent
     .slice(0,displayContent.indexOf(operator, 1))
     .join("");
     return parseFloat(leftOperand);
+    }
+    else return display.textContent;
 }
 
 function getRightOperand(display) {
@@ -147,7 +150,10 @@ function displayCalc(calculator, display) {
 }
 
 function operate(operator, num1, num2) {
+    if (!num2) return num1;
     switch (operator) {
+        case undefined:
+            return num1;
         case "+":
             return add(num1, num2);
         case "-":
