@@ -13,7 +13,7 @@ function calculator(){
         negateCurrentOperand(display);
     })
     equalsButton.addEventListener("click", (e) => {
-        let operationResult = operate(getOperator(display), getLeftOperand(display), getRightOperand(display));
+        let operationResult = operate(getOperator(display), parseFloat(getLeftOperand(display)), parseFloat(getRightOperand(display)));
         display.textContent = operationResult;
     })
 }
@@ -70,7 +70,7 @@ function getLeftOperand(display) {
     let leftOperand = displayContent
     .slice(0,displayContent.indexOf(operator, 1))
     .join("");
-    return parseFloat(leftOperand);
+    return leftOperand;
     }
     else return display.textContent;
 }
@@ -83,7 +83,7 @@ function getRightOperand(display) {
         .slice(displayContent.lastIndexOf(operator)+1)
         .join("");
         if (displayContent.includes(operator)) {
-            return parseFloat(rightOperand);
+            return rightOperand;
         }
     }
     else {
@@ -92,7 +92,7 @@ function getRightOperand(display) {
             .slice(displayContent.lastIndexOf(operator), -1)
             .join("");
             if (displayContent.includes(operator)) {
-                return parseFloat(rightOperand);
+                return rightOperand;
             }
         }
         else {
@@ -100,7 +100,7 @@ function getRightOperand(display) {
             .slice(displayContent.indexOf(operator), -1)
             .join("");
             if (displayContent.includes(operator)) {
-                return parseFloat(rightOperand);
+                return rightOperand;
             }
         }
     }
@@ -135,11 +135,25 @@ function addToDisplay(e, display) {
     }
 }
 
+function hasDecimalPoint(operand) {
+    if (!operand) return false;
+    else if (operand.includes(".")) return true;
+    else return false;
+}
+
 function displayCalc(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if(e.target.closest("button")) {
             if(e.target.closest(".calculator-operators") && getOperator(display)) {
                 replaceDisplayedOperator(e, display);
+            }
+            else if (e.target.closest(".decimal")) {
+                if (!hasDecimalPoint(getLeftOperand(display))) {
+                    addToDisplay(e, display);
+                }
+                else if (getRightOperand(display) && !hasDecimalPoint(getRightOperand(display))) {
+                    addToDisplay(e, display);
+                }
             }
             else if (!e.target.closest(".negate") && !e.target.closest(".equals")) {
                 addToDisplay(e, display);
