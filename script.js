@@ -21,6 +21,7 @@ function calculator(){
 function negateCurrentOperand(display) {
     const operators = ["÷", "×", "+", "-"];
     let displayArr = display.textContent.split("");
+    if (display.textContent === "Na=") return;
     if (!getRightOperand(display) || getRightOperand(display) === "") {
         if (displayArr[0] === "-") {
             display.textContent = display.textContent.slice(1);
@@ -50,8 +51,6 @@ function negateCurrentOperand(display) {
         }
     }
 }
-
-
 
 function getOperator(display) {
     const symbolsToRemove = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "=", ".", "(", ")"];
@@ -141,6 +140,13 @@ function isOperatorFirstButtonPressed(e, display) {
     }
 }
 
+function isFirstOperandValid(display) {
+    if (display.textContent === "-" || display.textContent === "." || display.textContent === "-.") {
+        return false;
+    }
+    else return true;
+}
+
 function hasDecimalPoint(operand) {
     if (!operand) return false;
     else if (operand.includes(".")) return true;
@@ -150,11 +156,17 @@ function hasDecimalPoint(operand) {
 function displayCalc(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if(e.target.closest("button")) {
+            if (display.textContent === "Na=") {
+                display.textContent = ""
+            }
             if(e.target.closest(".calculator-operators") && getOperator(display)) {
                 replaceDisplayedOperator(e, display);
             }
             else if (isOperatorFirstButtonPressed(e, display)) {
                 return
+            }
+            else if (e.target.closest(".calculator-operators") && !isFirstOperandValid(display)) {
+                return;
             }
             else if (e.target.closest(".decimal")) {
                 if (!hasDecimalPoint(getLeftOperand(display))) {
