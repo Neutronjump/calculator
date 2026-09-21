@@ -135,6 +135,12 @@ function addToDisplay(e, display) {
     }
 }
 
+function isOperatorFirstButtonPressed(e, display) {
+    if (e.target.closest(".calculator-operators") && display.textContent === "") {
+        return true;
+    }
+}
+
 function hasDecimalPoint(operand) {
     if (!operand) return false;
     else if (operand.includes(".")) return true;
@@ -146,6 +152,9 @@ function displayCalc(calculator, display) {
         if(e.target.closest("button")) {
             if(e.target.closest(".calculator-operators") && getOperator(display)) {
                 replaceDisplayedOperator(e, display);
+            }
+            else if (isOperatorFirstButtonPressed(e, display)) {
+                return
             }
             else if (e.target.closest(".decimal")) {
                 if (!hasDecimalPoint(getLeftOperand(display))) {
