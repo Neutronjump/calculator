@@ -14,7 +14,17 @@ function calculator(){
     })
     equalsButton.addEventListener("click", (e) => {
         let operationResult = operate(getOperator(display), parseFloat(getLeftOperand(display)), parseFloat(getRightOperand(display)));
-        display.textContent = operationResult;
+        if (operationResult.toString().includes(".")) {
+            let operationDecimalLength = operationResult
+            .toString()
+            .slice(operationResult.toString().indexOf("."))
+            .length;
+            if (operationDecimalLength > 8) {
+                display.textContent = Number(operationResult.toFixed(8));
+            }
+            else display.textContent = operationResult;
+        }
+        else display.textContent = operationResult;
     })
 }
 
