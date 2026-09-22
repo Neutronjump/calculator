@@ -179,7 +179,7 @@ function displayCalc(calculator, display) {
                 return;
             }
             else if (e.target.closest(".decimal")) {
-                if (!hasDecimalPoint(getLeftOperand(display))) {
+                if (!hasDecimalPoint(getLeftOperand(display)) && !getOperator(display)) {
                     addToDisplay(e, display);
                 }
                 else if (getRightOperand(display) && !hasDecimalPoint(getRightOperand(display))) {
