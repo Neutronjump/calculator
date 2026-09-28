@@ -14,7 +14,7 @@ function calculator(){
     })
     equalsButton.addEventListener("click", (e) => {
         let operationResult = operate(getOperator(display), parseFloat(getLeftOperand(display)), parseFloat(getRightOperand(display)));
-        if (operationResult.toString().includes(".")) {
+        if (operationResult.toString().includes(".") && !operationResult.toString().includes("e")) {
             let operationDecimalLength = operationResult
             .toString()
             .slice(operationResult.toString().indexOf("."))
@@ -67,6 +67,10 @@ function getOperator(display) {
     let displayArr = display.textContent.split("");
     if (displayArr[0] === "-") {
         displayArr.shift();
+    }
+    if (displayArr.includes("e")) {
+        let indexOfScientificNotation = displayArr.indexOf("e")
+        displayArr.splice(indexOfScientificNotation, 2);
     }
     let operator = displayArr.filter((item) => !(symbolsToRemove.includes(item)))[0];
     return operator;
@@ -125,12 +129,19 @@ function clearDisplay(calculator, display) {
 
 function replaceDisplayedOperator(e, display) {
     let displayArr = display.textContent.split("");
-    if (displayArr.includes(getOperator(display), 1)) {
+    if (displayArr.includes("e")) {
+        let endIndexOfScientificNotation = displayArr.indexOf("e") + 2;
+        if (displayArr.includes(getOperator(display), endIndexOfScientificNotation)) {
+        displayArr[displayArr.indexOf(getOperator(display), endIndexOfScientificNotation)] = e.target.textContent;
+        display.textContent = displayArr.join("");
+        }
+    }
+    else if (displayArr.includes(getOperator(display), 1)) {
         displayArr[displayArr.indexOf(getOperator(display), 1)] = e.target.textContent;
         display.textContent = displayArr.join("");
     }
-
 }
+
 function addToDisplay(e, display) {
     let buttonContent = e.target.textContent;
     if (display.textContent.includes(")")) {
@@ -169,6 +180,7 @@ function displayCalc(calculator, display) {
             if (display.textContent === "Na=") {
                 display.textContent = ""
             }
+            if (e.target.closest(".equals")) return;
             if(e.target.closest(".calculator-operators") && getOperator(display)) {
                 replaceDisplayedOperator(e, display);
             }
