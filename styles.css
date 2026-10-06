@@ -65,6 +65,7 @@
     font-size: 2em;
     width: 64px;
     height: 64px;
+    transition: 0.4s;
 }
 
 .calculator button:hover {
