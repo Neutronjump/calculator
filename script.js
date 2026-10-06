@@ -6,9 +6,10 @@ function calculator(){
     let equalsButton = document.querySelector(".equals");
     let negateButton = document.querySelector(".negate");
     
-    displayCalcKeyDown(calculator, display);
+    displayCalcKeyDown(display);
     displayCalcClick(calculator, display);
-    clearDisplay(calculator, display);
+    clearDisplayClick(calculator, display);
+    clearDisplayKeyboard(display);
 
     negateButton.addEventListener("click", (e) => {
         negateCurrentOperand(display);
@@ -133,9 +134,17 @@ function getRightOperand(display) {
     }
 }
 
-function clearDisplay(calculator, display) {
+function clearDisplayClick(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if (e.target.closest("button") && e.target.textContent === "C") {
+            display.textContent = ""
+        }
+    })
+}
+
+function clearDisplayKeyboard(display) {
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "c" || e.key === "C") {
             display.textContent = ""
         }
     })
@@ -234,7 +243,7 @@ function hasDecimalPoint(operand) {
     else return false;
 }
 
-function displayCalcKeyDown(calculator, display) {
+function displayCalcKeyDown(display) {
     document.addEventListener("keydown", (e) => {
         const validKeys=["0","1","2","3","4","5","6","7","8","9","c","+","/","-","*","Backspace", "=", ".", "Enter"]
         const validOperatorKeys=["+","/","-","*"];
