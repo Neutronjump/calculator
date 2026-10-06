@@ -6,7 +6,7 @@ function calculator(){
     let equalsButton = document.querySelector(".equals");
     let negateButton = document.querySelector(".negate");
 
-    displayCalc(calculator, display);
+    displayCalcClick(calculator, display);
     clearDisplay(calculator, display);
 
     negateButton.addEventListener("click", (e) => {
@@ -187,7 +187,7 @@ function hasDecimalPoint(operand) {
     else return false;
 }
 
-function displayCalc(calculator, display) {
+function displayCalcClick(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if(e.target.closest("button")) {
             if (display.textContent === "Na=") {
