@@ -5,7 +5,8 @@ function calculator(){
     let display = document.querySelector(".calculator-display p");
     let equalsButton = document.querySelector(".equals");
     let negateButton = document.querySelector(".negate");
-
+    
+    displayCalcKeyDown(calculator, display);
     displayCalcClick(calculator, display);
     clearDisplay(calculator, display);
 
@@ -44,7 +45,7 @@ function deleteFromDisplay(display) {
 function negateCurrentOperand(display) {
     const operators = ["÷", "×", "+", "-"];
     let displayArr = display.textContent.split("");
-    if (display.textContent === "Na=") return;
+    if (display.textContent === "Na=" || display.textContent === NaN) return;
     if (!getRightOperand(display) || getRightOperand(display) === "") {
         if (displayArr[0] === "-") {
             display.textContent = display.textContent.slice(1);
@@ -155,6 +156,24 @@ function replaceDisplayedOperator(e, display) {
     }
 }
 
+function replaceDisplayedOperatorKeyboard(e, display) {
+    let displayArr = display.textContent.split("");
+    if (displayArr.includes("e")) {
+        let endIndexOfScientificNotation = displayArr.indexOf("e") + 2;
+        if (displayArr.includes(getOperator(display), endIndexOfScientificNotation)) {
+        displayArr[displayArr.indexOf(getOperator(display), endIndexOfScientificNotation)] = e.key;
+        display.textContent = displayArr.join("");
+        }
+    }
+    else if (displayArr.includes(getOperator(display), 1)) {
+        keyName = e.key;
+        if (keyName === "/") keyName = "÷";
+        if (keyName === "*") keyName = "×";
+        displayArr[displayArr.indexOf(getOperator(display), 1)] = keyName;
+        display.textContent = displayArr.join("");
+    }
+}
+
 function addToDisplay(e, display) {
     let buttonContent = e.target.textContent;
     if (display.textContent.includes(")")) {
@@ -168,8 +187,36 @@ function addToDisplay(e, display) {
     }
 }
 
+function addToDisplayKeyboard(e, display) {
+    let keyName = e.key;
+    if (display.textContent.includes(")")) {
+        let displayArr = display.textContent.split("");
+        let indexOfCloseParenthesis = displayArr.indexOf(")");
+        displayArr.splice(indexOfCloseParenthesis - 1, 0, keyName);
+        display.textContent = displayArr.join("");
+    }
+    else if (keyName === "/") {
+        keyName = "÷";
+        display.textContent += keyName;
+    }
+    else if (keyName === "*") {
+        keyName = "×";
+        display.textContent += keyName;
+    }
+    else {
+        display.textContent += keyName;
+    }
+}
+
 function isOperatorFirstButtonPressed(e, display) {
     if (e.target.closest(".calculator-operators") && display.textContent === "") {
+        return true;
+    }
+}
+
+function isOperatorFirstKeyPressed(e, display) {
+    const validOperatorKeys=["+","/","-","*"];
+    if (validOperatorKeys.includes(e.key) && display.textContent === "") {
         return true;
     }
 }
@@ -187,10 +234,61 @@ function hasDecimalPoint(operand) {
     else return false;
 }
 
+function displayCalcKeyDown(calculator, display) {
+    document.addEventListener("keydown", (e) => {
+        const validKeys=["0","1","2","3","4","5","6","7","8","9","c","+","/","-","*","Backspace", "=", ".", "Enter"]
+        const validOperatorKeys=["+","/","-","*"];
+        if(validKeys.includes(e.key)) {
+            if (display.textContent === "Na=" || display.textContent === "NaN") {
+                display.textContent = ""
+            }
+            
+            if (e.key === "=" || e.key === "Enter") {
+                let operationResult = operate(getOperator(display), parseFloat(getLeftOperand(display)), parseFloat(getRightOperand(display)));
+                if (operationResult.toString().includes(".") && !operationResult.toString().includes("e")) {
+                    let operationDecimalLength = operationResult
+                    .toString()
+                    .slice(operationResult.toString().indexOf("."))
+                    .length;
+                    if (operationDecimalLength > 8) {
+                        display.textContent = Number(operationResult.toFixed(8));
+                    }
+                    else display.textContent = operationResult;
+                }
+            else display.textContent = operationResult;
+            }
+            else if (e.key === "Backspace") {
+                deleteFromDisplay(display);
+            }
+            else if(validOperatorKeys.includes(e.key) && getOperator(display)) {
+                replaceDisplayedOperatorKeyboard(e, display);
+            }
+            else if (isOperatorFirstKeyPressed(e, display)) {
+                return
+            }
+            else if (validOperatorKeys.includes(e.key) && !isFirstOperandValid(display)) {
+                return;
+            }
+            else if (e.key === ".") {
+                if (!hasDecimalPoint(getLeftOperand(display)) && !getOperator(display)) {
+                    addToDisplayKeyboard(e, display);
+                }
+                else if (getRightOperand(display) && !hasDecimalPoint(getRightOperand(display))) {
+                    addToDisplayKeyboard(e, display);
+                }
+            }
+            else if (e.key != "=" && e.key != "Enter") {
+                addToDisplayKeyboard(e, display);
+            }
+            
+        }
+    })
+}
+
 function displayCalcClick(calculator, display) {
     calculator.addEventListener("click", (e) => {
         if(e.target.closest("button")) {
-            if (display.textContent === "Na=") {
+            if (display.textContent === "Na=" || display.textContent === "NaN") {
                 display.textContent = ""
             }
             
