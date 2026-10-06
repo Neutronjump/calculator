@@ -28,6 +28,19 @@ function calculator(){
     })
 }
 
+function deleteFromDisplay(display) {
+    let displayArr = display.textContent.split("");
+    if (displayArr.at(-1) === ")") {
+        displayArr.splice(-1, 1)
+        displayArr.splice(displayArr.indexOf("("), 1)
+        displayArr.splice(displayArr.lastIndexOf("-"), 1);
+    }
+    else {
+        displayArr.splice(-1,1);
+    }
+    display.textContent = displayArr.join("");
+}
+
 function negateCurrentOperand(display) {
     const operators = ["÷", "×", "+", "-"];
     let displayArr = display.textContent.split("");
@@ -180,8 +193,12 @@ function displayCalc(calculator, display) {
             if (display.textContent === "Na=") {
                 display.textContent = ""
             }
+            
             if (e.target.closest(".equals")) return;
-            if(e.target.closest(".calculator-operators") && getOperator(display)) {
+            else if (e.target.closest(".backspace")) {
+                deleteFromDisplay(display);
+            }
+            else if(e.target.closest(".calculator-operators") && getOperator(display)) {
                 replaceDisplayedOperator(e, display);
             }
             else if (isOperatorFirstButtonPressed(e, display)) {
