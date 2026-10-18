@@ -4,6 +4,9 @@ body {
     background-color: rgb(40, 50, 60);
     font-family: "Lato", Arial, sans-serif;
     margin: 0px;
+    min-height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
 }
 
 /* Header */
@@ -57,6 +60,17 @@ body {
     font-style: italic;
 }
 
+/* Footer */
+.footer {
+    display:flex;
+    margin-top: auto;
+    justify-content: center;
+}
+
+.footer p {
+    color: rgb(150,150,150);
+    font-weight: 300;
+}
 
 /* General Containers */
 .calculator-container {
